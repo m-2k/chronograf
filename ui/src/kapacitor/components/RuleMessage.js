@@ -21,6 +21,16 @@ export const RuleMessage = React.createClass({
     actions.updateAlerts(item.ruleID, [item.text]);
   },
 
+  handleInsertTemplate(templateString) {
+    const {actions, rule} = this.props;
+    const messageValue = this.message.value;
+    const messageBefore = messageValue.substring(0, this.message.selectionEnd);
+    const messageAfter = messageValue.substring(this.message.selectionEnd);
+
+    const newMessageValue = messageBefore + templateString + messageAfter;
+    actions.updateMessage(rule.id, newMessageValue);
+  },
+
   render() {
     const {rule, actions} = this.props;
     const alerts = this.props.enabledAlerts.map((text) => {
@@ -40,7 +50,7 @@ export const RuleMessage = React.createClass({
           />
           <div className="alert-message--formatting">
             <p>Templates:</p>
-            <code data-tip="The ID of the alert">&#123;&#123;.ID&#125;&#125;</code>
+            <code data-tip="The ID of the alert" onClick={this.handleInsertTemplate("{.ID}")}>&#123;&#123;.ID&#125;&#125;</code>
             <code data-tip="Measurement name">&#123;&#123;.Name&#125;&#125;</code>
             <code data-tip="The name of the task">&#123;&#123;.TaskName&#125;&#125;</code>
             <code data-tip="Concatenation of all group-by tags of the form <code>&#91;key=value,&#93;+</code>. If no groupBy is performed equal to literal &quot;nil&quot;">&#123;&#123;.Group&#125;&#125;</code>
